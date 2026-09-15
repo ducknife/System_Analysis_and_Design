@@ -1,0 +1,9 @@
+Log System Design Môn học: 
+1. Pha yêu cầu: 
+- Hình 3.2 Khách hàng vãng lai, có thế mới đến và chưa có thông tin tài khoản, tra cứu chỉ dành cho người đã có, khách chưa có mà đến sửa thì không tìm được, phải xử lí ngoại lệ.
+- Hình 3.3 Bỏ cái đuôi của theo biến số xe (vì có thể theo nhiều hình thức).
+- Hình 3.4 Chỉ khi trả offline mới nối vào actor phụ, còn không thì không cần nối. 
+DONE 
+
+2. Pha phân tích: 
+- 
