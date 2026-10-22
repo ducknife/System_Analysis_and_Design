@@ -1,0 +1,144 @@
+@startuml
+' Bieu do lop day du pha phan tich - Chuc nang 3: Tinh cong tra luong cho NVPV theo thang
+' Da them ConfirmReceivedView + checkSalaryTableOfMonth() + updateIsReceived()
+' theo nhan xet "thieu GD va ham xu li ngoai le".
+' Chuc nang nay khong can Component, ComponentDetail, Appointment, Customer, Slot.
+
+hide circle
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #87CEEB
+  BorderColor Black
+  ArrowColor Black
+}
+
+' ================= LOP GIAO DIEN =================
+class ManagerView {
+  -outManagerInfo
+  -subReceive
+  -subAssign
+  -subCalSalary
+  -subBack
+}
+
+class ChooseMonthView {
+  -inMonth
+  -inYear
+  -subChoose
+}
+
+class SummarySheetView {
+  -outStaffLaborList
+  -subConfirm
+  -subBack
+}
+
+class DetailSheetView {
+  -outServiceSlipOfStaff
+  -outTotalLabor
+  -outSalary
+  -subChooseMethod
+  -subBack
+}
+
+class ChooseMethodView {
+  -outMethodList
+  -subChoose
+  -subBack
+}
+
+class ConfirmReceivedView {
+  -outSalaryInfo
+  -subReceived
+}
+
+' ================= LOP THUC THE =================
+class User {
+  -username
+  -password
+  -fullname
+  -phone
+  -email
+}
+
+class Manager {
+  -employeeId
+  -specialization
+}
+
+class Staff {
+  -employeeId
+  -specialization
+  -bankAccount
+}
+
+class Car {
+  -licensePlate
+  -brand
+  -model
+  -year
+}
+
+class ServiceSlip {
+  -ssId
+  -time
+  -status
+  -totalCost
+}
+
+class ServiceDetail {
+  -price
+  -laborContent
+  -startedAt
+  -finishedAt
+  +getServiceDetailsOfStaffInMonth()
+}
+
+class Service {
+  -name
+  -price
+  -laborContent
+}
+
+class SalaryTable {
+  -month
+  -year
+  -laborUnitPrice
+  -paymentMethod
+  -isReceived
+  -status
+  +checkSalaryTableOfMonth()
+  +getSalaryTablesOfMonth()
+  +savePaymentMethod()
+  +saveAllSalaryTableOfMonth()
+  +updateIsReceived()
+}
+
+' ---- Ke thua ----
+User <|-- Manager
+User <|-- Staff
+
+' ---- Quan he chua giua cac lop thuc the ----
+SalaryTable    "n" o-- "1" Staff
+SalaryTable    "n" o-- "1" Manager
+ServiceSlip    "n" o-- "1" Car
+ServiceSlip    "1" o-- "n" ServiceDetail
+ServiceDetail  "n" o-- "1" Service
+ServiceDetail  "n" o-- "1" Staff
+
+' ---- Giao dien goi giao dien ----
+ManagerView -- ChooseMonthView
+ChooseMonthView -- SummarySheetView
+SummarySheetView -- DetailSheetView
+DetailSheetView -- ChooseMethodView
+ChooseMethodView -- ConfirmReceivedView
+SummarySheetView -- ManagerView
+
+' ---- Giao dien goi lop thuc the ----
+ChooseMonthView -- SalaryTable
+SummarySheetView -- SalaryTable
+DetailSheetView -- ServiceDetail
+ChooseMethodView -- SalaryTable
+ConfirmReceivedView -- SalaryTable
+
+@enduml

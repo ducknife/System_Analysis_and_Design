@@ -1,0 +1,184 @@
+@startuml
+' Bieu do lop day du pha phan tich - Chuc nang 1: Tiep nhan xe va chon dich vu/phu tung
+' Chuc nang nay khong can Slot, Staff, SalaryTable.
+
+hide circle
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #87CEEB
+  BorderColor Black
+  ArrowColor Black
+}
+
+' ================= LOP GIAO DIEN =================
+class LoginView {
+  -inUsername
+  -inPassword
+  -subLogin
+}
+
+class ManagerView {
+  -outManagerInfo
+  -subReceive
+  -subAssign
+  -subCalSalary
+  -subBack
+}
+
+class SearchCustomerInfoView {
+  -inPhone
+  -subSearch
+  -subBack
+  -outCustomerInfo
+  -subAddCustomerInfo
+  -subReceive
+}
+
+class AddCustomerView {
+  -inFullname
+  -inPhone
+  -inEmail
+  -inAddress
+  -inLicensePlate
+  -inBrand
+  -inModel
+  -inYear
+  -subAdd
+}
+
+class ServiceSlipInfoView {
+  -outServiceSlipInfo
+  -subBack
+  -subAddService
+}
+
+class SearchServiceView {
+  -inServiceKeyword
+  -subSearch
+  -subBack
+  -subAddComponent
+  -outServiceInfoList
+}
+
+class AddComponentView {
+  -inComponentKeyword
+  -subSearch
+  -subBack
+  -subConfirm
+  -outComponentList
+}
+
+' ================= LOP THUC THE =================
+class User {
+  -username
+  -password
+  -fullname
+  -phone
+  -email
+  +checkLogin()
+}
+
+class Manager {
+  -employeeId
+  -specialization
+}
+
+class Customer {
+  -address
+  +findCustomerInfoByPhone()
+  +addCustomer()
+}
+
+class Car {
+  -licensePlate
+  -brand
+  -model
+  -year
+  +findCarInfosOfCustomer()
+  +addCar()
+}
+
+class Appointment {
+  -appId
+  -time
+  -status
+  +findAppointmentsOfCustomer()
+}
+
+class ServiceSlip {
+  -ssId
+  -time
+  -status
+  -totalCost
+  +createServiceSlip()
+  +saveServiceSlip()
+}
+
+class ServiceDetail {
+  -price
+  -laborContent
+  -startedAt
+  -finishedAt
+  +addServiceToSlip()
+}
+
+class ComponentDetail {
+  -qty
+  -price
+  +addComponentToSlip()
+}
+
+class Service {
+  -name
+  -price
+  -laborContent
+  +findServicesByKeyword()
+}
+
+class Component {
+  -name
+  -price
+  -inventoryQty
+  +findComponentByKeyword()
+  +updateInventoryQty()
+}
+
+' ---- Ke thua ----
+User <|-- Customer
+User <|-- Manager
+
+' ---- Quan he chua giua cac lop thuc the ----
+Car            "n" o-- "1" Customer
+Appointment    "n" o-- "1" Customer
+Appointment    "n" o-- "1" Car
+ServiceSlip    "n" o-- "1" Car
+ServiceSlip    "1" o-- "1" Appointment
+ServiceSlip    "n" o-- "1" Manager
+ServiceSlip    "1" o-- "n" ServiceDetail
+ServiceSlip    "1" o-- "n" ComponentDetail
+ServiceDetail  "n" o-- "1" Service
+ComponentDetail "n" o-- "1" Component
+
+' ---- Giao dien goi giao dien ----
+LoginView -- ManagerView
+ManagerView -- SearchCustomerInfoView
+SearchCustomerInfoView -- AddCustomerView
+SearchCustomerInfoView -- ServiceSlipInfoView
+ServiceSlipInfoView -- SearchServiceView
+SearchServiceView -- AddComponentView
+
+' ---- Giao dien goi lop thuc the ----
+LoginView -- User
+SearchCustomerInfoView -- Customer
+SearchCustomerInfoView -- Car
+SearchCustomerInfoView -- Appointment
+SearchCustomerInfoView -- ServiceSlip
+AddCustomerView -- Customer
+AddCustomerView -- Car
+SearchServiceView -- Service
+SearchServiceView -- ServiceDetail
+AddComponentView -- Component
+AddComponentView -- ComponentDetail
+AddComponentView -- ServiceSlip
+
+@enduml

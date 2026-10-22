@@ -4,6 +4,3 @@ Log System Design Môn học:
 - Hình 3.3 Bỏ cái đuôi của theo biến số xe (vì có thể theo nhiều hình thức).
 - Hình 3.4 Chỉ khi trả offline mới nối vào actor phụ, còn không thì không cần nối. 
 DONE 
-
-2. Pha phân tích: 
-- 

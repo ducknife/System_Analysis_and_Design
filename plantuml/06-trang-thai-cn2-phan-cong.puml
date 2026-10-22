@@ -1,0 +1,52 @@
+@startuml
+' Bieu do trang thai - Chuc nang 2: Phan cong nhan vien phuc vu
+' Da bo sung nhanh chon slot ky thuat va ngoai le het slot.
+' Moi chuyen trang thai deu co ve "/ hanh dong" cua he thong.
+
+skinparam state {
+  BackgroundColor #87CEEB
+  BorderColor Black
+}
+skinparam ArrowColor Black
+
+state "Hiện GD chính của QL"                            as GDChinh
+state "Hiện GD tìm phiếu dịch vụ cần phân công"         as GDTimPhieu
+state "Hiện thông báo không tìm thấy phiếu dịch vụ"     as TBKhongThayPhieu
+state "Hiện GD chứa danh sách nhân viên phục vụ"        as GDDanhSachNV
+state "Hiện thông báo chưa chọn đủ nhân viên"           as TBThieuNV
+state "Hiện GD danh sách slot kỹ thuật"                 as GDSlot
+state "Hiện thông báo không còn slot kỹ thuật trống"    as TBHetSlot
+state "Hiện thông báo phân công thành công"             as TBThanhCong
+
+state cTimPhieu <<choice>>
+state cDuNV     <<choice>>
+state cConSlot  <<choice>>
+
+[*] --> GDChinh
+
+GDChinh      --> GDTimPhieu        : [chọn Phân công nhân viên phục vụ]
+
+GDTimPhieu   --> cTimPhieu         : [QL nhập thông tin phiếu dịch vụ và nhấn Tìm kiếm] / tra cứu phiếu dịch vụ theo từ khoá
+cTimPhieu    --> GDTimPhieu        : [tìm thấy] / hiển thị thông tin phiếu và danh sách dịch vụ, phụ tùng đã chọn
+cTimPhieu    --> TBKhongThayPhieu  : [không tìm thấy]
+TBKhongThayPhieu --> GDTimPhieu    : [chọn OK]
+
+GDTimPhieu   --> GDDanhSachNV      : [chọn Phân công] / lấy danh sách nhân viên phục vụ kèm số phiếu đang thực hiện
+GDTimPhieu   --> GDChinh           : [chọn Quay lại]
+
+GDDanhSachNV --> GDDanhSachNV      : [QL chọn nhân viên cho một dịch vụ trong phiếu] / gán nhân viên cho dịch vụ đó
+GDDanhSachNV --> cDuNV             : [chọn Xác nhận phân công] / kiểm tra đã chọn đủ nhân viên cho mọi dịch vụ
+cDuNV        --> TBThieuNV         : [chưa chọn đủ nhân viên]
+TBThieuNV    --> GDDanhSachNV      : [chọn OK]
+cDuNV        --> cConSlot          : [đã chọn đủ nhân viên] / lấy danh sách slot kỹ thuật đang trống
+cConSlot     --> TBHetSlot         : [không còn slot trống]
+TBHetSlot    --> GDDanhSachNV      : [chọn OK]
+cConSlot     --> GDSlot            : [còn slot trống] / hiển thị danh sách slot đang trống
+
+GDSlot       --> GDDanhSachNV      : [chọn Quay lại]
+GDSlot       --> TBThanhCong       : [QL chọn slot và nhấn Chọn] / gán slot cho phiếu, chuyển slot sang "Đang sử dụng", chuyển phiếu sang "Đang thực hiện", gửi thông báo phân công cho NVPV
+
+TBThanhCong  --> GDChinh           : [chọn OK]
+GDChinh      --> [*]               : [chọn Đăng xuất]
+
+@enduml

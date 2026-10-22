@@ -1,0 +1,109 @@
+@startuml
+' Bieu do tuan tu - Chuc nang 1: Tiep nhan xe va chon dich vu/phu tung
+' So thu tu thong diep khop 1-1 voi kich ban v.2 trong file Word (63 buoc).
+' Trong Visual Paradigm: chuot phai tren bieu do -> Synchronize to Communication Diagram
+' de doi sang bieu do cong tac.
+
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 220
+autonumber "<b>0,"
+
+actor "Quản lý" as QL
+actor "Khách hàng" as KH
+participant LoginView
+participant ManagerView
+participant SearchCustomerInfoView
+participant ServiceSlipInfoView
+participant SearchServiceView
+participant AddComponentView
+participant User
+participant Customer
+participant Car
+participant Appointment
+participant ServiceSlip
+participant Service
+participant ServiceDetail
+participant Component
+participant ComponentDetail
+
+QL -> LoginView : login
+LoginView -> User : call
+User -> User : checkLogin()
+User --> LoginView : return
+LoginView -> ManagerView : call
+ManagerView -> QL : show
+
+QL -> ManagerView : choose Tiếp nhận xe và chọn dịch vụ/phụ tùng
+ManagerView -> SearchCustomerInfoView : call
+SearchCustomerInfoView -> QL : show
+QL -> SearchCustomerInfoView : type & search
+SearchCustomerInfoView -> Customer : call
+Customer -> Customer : findCustomerInfoByPhone()
+Customer --> SearchCustomerInfoView : return
+SearchCustomerInfoView -> Car : call
+Car -> Car : findCarInfosOfCustomer()
+Car --> SearchCustomerInfoView : return
+SearchCustomerInfoView -> Appointment : call
+Appointment -> Appointment : findAppointmentsOfCustomer()
+Appointment --> SearchCustomerInfoView : return
+SearchCustomerInfoView -> QL : show
+
+QL -> KH : yêu cầu xác nhận thông tin KH/xe
+KH -> QL : xác nhận thông tin chính xác
+
+QL -> SearchCustomerInfoView : choose lịch hẹn & click Tiếp nhận
+SearchCustomerInfoView -> ServiceSlip : call
+ServiceSlip -> ServiceSlip : createServiceSlip()
+ServiceSlip --> SearchCustomerInfoView : return
+SearchCustomerInfoView -> ServiceSlipInfoView : call
+ServiceSlipInfoView -> QL : show
+
+QL -> ServiceSlipInfoView : choose Thêm dịch vụ
+ServiceSlipInfoView -> SearchServiceView : call
+SearchServiceView -> QL : show
+
+note over QL, SearchServiceView
+  Từ bước 32 đến 40 lặp lại cho đến khi chọn xong dịch vụ
+end note
+
+QL -> SearchServiceView : type & search
+SearchServiceView -> Service : call
+Service -> Service : findServicesByKeyword()
+Service --> SearchServiceView : return
+SearchServiceView -> QL : show
+QL -> SearchServiceView : choose dịch vụ
+SearchServiceView -> ServiceDetail : call
+ServiceDetail -> ServiceDetail : addServiceToSlip()
+ServiceDetail --> SearchServiceView : return
+
+QL -> SearchServiceView : choose Thêm phụ tùng
+SearchServiceView -> AddComponentView : call
+AddComponentView -> QL : show
+
+note over QL, AddComponentView
+  Từ bước 44 đến 55 lặp lại cho đến khi chọn xong phụ tùng
+end note
+
+QL -> AddComponentView : type & search
+AddComponentView -> Component : call
+Component -> Component : findComponentByKeyword()
+Component --> AddComponentView : return
+AddComponentView -> QL : show
+QL -> AddComponentView : choose phụ tùng
+AddComponentView -> ComponentDetail : call
+ComponentDetail -> ComponentDetail : addComponentToSlip()
+ComponentDetail --> AddComponentView : return
+AddComponentView -> Component : call
+Component -> Component : updateInventoryQty()
+Component --> AddComponentView : return
+
+QL -> AddComponentView : click Xác nhận lưu phiếu dịch vụ
+AddComponentView -> ServiceSlip : call
+ServiceSlip -> ServiceSlip : saveServiceSlip()
+ServiceSlip --> AddComponentView : return
+AddComponentView -> QL : success
+QL -> AddComponentView : click OK
+AddComponentView -> ManagerView : call
+ManagerView -> QL : show
+
+@enduml

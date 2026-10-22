@@ -1,0 +1,56 @@
+@startuml
+' Bieu do trang thai - Chuc nang 3: Tinh cong tra luong cho NVPV theo thang
+' Da bo sung GD xac nhan da nhan luong cua NVPV (ngoai le 9)
+' va cac hanh dong xu li cua he thong tren tung chuyen trang thai.
+
+skinparam state {
+  BackgroundColor #87CEEB
+  BorderColor Black
+}
+skinparam ArrowColor Black
+
+state "Hiện GD chính của QL"                           as GDChinh
+state "Hiện GD chọn tháng cần tính lương"              as GDChonThang
+state "Hiện thông báo tháng lương đã được tính"        as TBDaTinh
+state "Hiện GD bảng công tổng hợp"                     as GDTongHop
+state "Hiện GD bảng công chi tiết của NVPV"            as GDChiTiet
+state "Hiện GD chọn hình thức trả lương"               as GDHinhThuc
+state "Hiện GD xác nhận đã nhận lương (của NVPV)"      as GDXacNhan
+state "Hiện thông báo nhân viên đã nhận lương"         as TBDaNhan
+state "Hiện thông báo tính lương thành công"           as TBThanhCong
+
+state cThang     <<choice>>
+state cHinhThuc  <<choice>>
+
+[*] --> GDChinh
+
+GDChinh     --> GDChonThang : [chọn Tính công trả lương cho NVPV theo tháng]
+
+GDChonThang --> cThang      : [QL chọn tháng, năm và nhấn Chọn] / kiểm tra tháng đã chốt bảng lương hay chưa
+cThang      --> TBDaTinh    : [tháng đã tính lương]
+TBDaTinh    --> GDChonThang : [chọn OK]
+cThang      --> GDTongHop   : [tháng chưa tính lương] / truy vấn các phiếu dịch vụ "Đã hoàn thành" trong tháng và tổng hợp công theo từng NVPV
+
+GDTongHop   --> GDChiTiet   : [QL chọn 1 dòng nhân viên] / lấy chi tiết các dịch vụ nhân viên đó đã thực hiện trong tháng
+GDChiTiet   --> GDTongHop   : [chọn Quay lại]
+
+GDChiTiet   --> GDHinhThuc  : [chọn Hình thức trả lương]
+GDHinhThuc  --> GDChiTiet   : [chọn Quay lại]
+GDHinhThuc  --> cHinhThuc   : [QL chọn hình thức trả lương] / lưu hình thức trả lương cho NVPV
+cHinhThuc   --> GDChiTiet   : [Chuyển khoản]
+cHinhThuc   --> GDXacNhan   : [Tiền mặt] / gửi yêu cầu xác nhận đã nhận lương cho NVPV
+
+GDXacNhan   --> TBDaNhan    : [NVPV chọn Đã nhận] / cập nhật trạng thái đã nhận lương của NVPV
+TBDaNhan    --> GDChiTiet   : [QL chọn OK]
+
+GDTongHop   --> TBThanhCong : [chọn Xác nhận chốt bảng lương] / lưu bảng lương của tháng kèm hình thức trả lương
+TBThanhCong --> GDChinh     : [chọn OK]
+
+GDChinh     --> [*]         : [chọn Đăng xuất]
+
+note bottom of GDXacNhan
+  Giao diện này do Nhân viên phục vụ thao tác,
+  ứng với ngoại lệ 9 của kịch bản.
+end note
+
+@enduml

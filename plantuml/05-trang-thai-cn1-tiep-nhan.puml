@@ -1,0 +1,68 @@
+@startuml
+' Bieu do trang thai - Chuc nang 1: Tiep nhan xe va chon dich vu/phu tung
+' Sua theo nhan xet cua thay: "thieu cac action xu li cua BE"
+' -> moi chuyen trang thai da co ve "/ hanh dong" cua he thong.
+' Da bo sung trang thai ket thuc.
+
+skinparam state {
+  BackgroundColor #87CEEB
+  BorderColor Black
+}
+skinparam ArrowColor Black
+
+state "Hiện GD đăng nhập"                              as GDLogin
+state "Hiện thông báo đăng nhập sai"                   as TBLoginSai
+state "Hiện GD chính của QL"                           as GDChinh
+state "Hiện GD tra cứu thông tin khách hàng/xe"        as GDTraCuu
+state "Hiện thông báo không tìm thấy thông tin KH/xe"  as TBKhongThayKH
+state "Hiện GD nhập thông tin khách hàng/xe"           as GDThemKH
+state "Hiện GD chứa thông tin phiếu dịch vụ"           as GDPhieu
+state "Hiện GD tìm thông tin dịch vụ"                  as GDTimDV
+state "Hiện thông báo không tìm thấy dịch vụ"          as TBKhongThayDV
+state "Hiện GD thêm phụ tùng"                          as GDThemPT
+state "Hiện thông báo không tìm thấy phụ tùng"         as TBKhongThayPT
+state "Hiện thông báo thêm phiếu dịch vụ thành công"   as TBThanhCong
+
+state cLogin  <<choice>>
+state cTimKH  <<choice>>
+state cTimDV  <<choice>>
+state cTimPT  <<choice>>
+
+[*] --> GDLogin
+
+GDLogin   --> cLogin        : [QL nhập thông tin đăng nhập và nhấn Login] / kiểm tra tài khoản
+cLogin    --> TBLoginSai    : [Sai]
+cLogin    --> GDChinh       : [Đúng] / lấy thông tin QL
+TBLoginSai --> GDLogin      : [chọn OK]
+
+GDChinh   --> GDTraCuu      : [chọn Tiếp nhận xe và chọn dịch vụ/phụ tùng]
+
+GDTraCuu  --> cTimKH        : [QL nhập số điện thoại và nhấn Tìm kiếm] / tra cứu khách hàng, xe và lịch hẹn
+cTimKH    --> GDTraCuu      : [tìm thấy] / hiển thị thông tin khách hàng, xe và lịch hẹn
+cTimKH    --> TBKhongThayKH : [không tìm thấy]
+TBKhongThayKH --> GDThemKH  : [chọn Thêm thông tin khách hàng/xe]
+GDThemKH  --> GDTraCuu      : [QL nhập thông tin khách hàng/xe và nhấn Thêm] / lưu khách hàng và xe
+
+GDTraCuu  --> GDPhieu       : [QL chọn lịch hẹn và chọn Tiếp nhận] / cập nhật lịch hẹn thành "Đã tiếp nhận", tạo phiếu dịch vụ mới
+GDPhieu   --> GDTraCuu      : [chọn Quay lại]
+GDPhieu   --> GDTimDV       : [chọn Thêm dịch vụ]
+
+GDTimDV   --> cTimDV        : [QL nhập thông tin dịch vụ và nhấn Tìm kiếm] / tra cứu dịch vụ theo từ khoá
+cTimDV    --> GDTimDV       : [tìm thấy] / hiển thị danh sách dịch vụ
+cTimDV    --> TBKhongThayDV : [không tìm thấy]
+TBKhongThayDV --> GDTimDV   : [chọn OK]
+GDTimDV   --> GDTimDV       : [QL chọn dịch vụ cần dùng] / thêm dịch vụ vào phiếu, cộng dồn chi phí dịch vụ
+GDTimDV   --> GDThemPT      : [chọn Thêm phụ tùng]
+
+GDThemPT  --> cTimPT        : [QL nhập thông tin phụ tùng và nhấn Tìm kiếm] / tra cứu phụ tùng theo từ khoá
+cTimPT    --> GDThemPT      : [tìm thấy] / hiển thị danh sách phụ tùng
+cTimPT    --> TBKhongThayPT : [không tìm thấy]
+TBKhongThayPT --> GDThemPT  : [chọn OK]
+GDThemPT  --> GDThemPT      : [QL chọn phụ tùng cần dùng] / thêm phụ tùng vào phiếu, trừ số lượng tồn kho, cộng dồn chi phí phụ tùng
+
+GDThemPT  --> TBThanhCong   : [chọn Xác nhận lưu phiếu dịch vụ] / lưu phiếu, tính tổng chi phí tạm tính, chuyển trạng thái phiếu sang "Chờ phân công"
+TBThanhCong --> GDChinh     : [chọn OK]
+
+GDChinh   --> [*]           : [chọn Đăng xuất]
+
+@enduml

@@ -1,0 +1,131 @@
+@startuml
+' Bieu do lop thuc the chung cho ca module M2 - He thong quan ly gara o to
+' Da sua theo nhan xet cua thay: them lop Slot, bo serviceList/componentList/staffList,
+' tach n-n thanh 1-n that, bo sung hinh thoi (quan he chua) con thieu.
+' Quy uoc: kim cuong dat o LOP CHUA. Trong PlantUML, "A o-- B" ve kim cuong o phia A.
+
+hide circle
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #87CEEB
+  BorderColor Black
+  ArrowColor Black
+}
+
+class User {
+  -username
+  -password
+  -fullname
+  -phone
+  -email
+}
+
+class Customer {
+  -address
+}
+
+class Manager {
+  -employeeId
+  -specialization
+}
+
+class Staff {
+  -employeeId
+  -specialization
+  -bankAccount
+}
+
+class Car {
+  -licensePlate
+  -brand
+  -model
+  -year
+}
+
+class Appointment {
+  -appId
+  -time
+  -status
+}
+
+class Slot {
+  -slotId
+  -location
+  -status
+}
+
+class ServiceSlip {
+  -ssId
+  -time
+  -status
+  -totalCost
+}
+
+class ServiceDetail {
+  -price
+  -laborContent
+  -startedAt
+  -finishedAt
+}
+
+class ComponentDetail {
+  -qty
+  -price
+}
+
+class Service {
+  -name
+  -price
+  -laborContent
+}
+
+class Component {
+  -name
+  -price
+  -inventoryQty
+}
+
+class SalaryTable {
+  -month
+  -year
+  -laborUnitPrice
+  -paymentMethod
+  -isReceived
+  -status
+}
+
+' ---- Ke thua ----
+User <|-- Customer
+User <|-- Manager
+User <|-- Staff
+
+' ---- Quan he chua (kim cuong o lop chua) ----
+Car            "n" o-- "1" Customer
+Appointment    "n" o-- "1" Customer
+Appointment    "n" o-- "1" Car
+ServiceSlip    "n" o-- "1" Car
+ServiceSlip    "1" o-- "1" Appointment
+ServiceSlip    "n" o-- "1" Manager
+ServiceSlip    "n" o-- "1" Slot
+ServiceSlip    "1" o-- "n" ServiceDetail
+ServiceSlip    "1" o-- "n" ComponentDetail
+ServiceDetail  "n" o-- "1" Service
+ServiceDetail  "n" o-- "1" Staff
+ComponentDetail "n" o-- "1" Component
+SalaryTable    "n" o-- "1" Staff
+SalaryTable    "n" o-- "1" Manager
+
+note bottom of Slot
+  Một slot tại một thời điểm chỉ nhận một xe vào sửa.
+  Car và Slot là n - n, tách bằng lớp trung gian ServiceSlip.
+  Ràng buộc: mỗi Slot chỉ có tối đa một ServiceSlip
+  đang ở trạng thái "Đang thực hiện".
+end note
+
+note bottom of ServiceDetail
+  Lớp trung gian của quan hệ n - n giữa ServiceSlip và Service.
+  Mỗi dòng là một suất việc: một dịch vụ trong một phiếu
+  do một nhân viên phục vụ thực hiện.
+end note
+
+@enduml
