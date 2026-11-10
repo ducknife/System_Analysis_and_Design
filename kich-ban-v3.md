@@ -57,108 +57,116 @@ lớp thực thể. Tên hàm lấy đúng theo biểu đồ lớp chi tiết �
 47. Lớp RESTController trả kết quả cho lớp HTTPClient
 48. Lớp HTTPClient trả kết quả cho SearchCustomerInfo.tsx
 49. SearchCustomerInfo.tsx hiển thị thông tin khách hàng, danh sách xe và lịch hẹn cho quản lý
-50. Quản lý click nút Tiếp nhận trên dòng xe cần sửa
-51. SearchCustomerInfo.tsx lưu vào session: carID
-52. SearchCustomerInfo.tsx gọi ServiceSlipInfo.tsx
-53. ServiceSlipInfo.tsx lấy từ session: carID
-54. ServiceSlipInfo.tsx gọi lớp HTTPClient
-55. Lớp HTTPClient thực hiện hàm fetch()
-56. Lớp HTTPClient gọi lớp RESTController
-57. Lớp RESTController thực hiện hàm requestMapping()
-58. Lớp RESTController gọi lớp ServiceSlipDAO
-59. Lớp ServiceSlipDAO thực hiện hàm createServiceSlip()
-60. Lớp ServiceSlipDAO gọi lớp ServiceSlip
-61. Lớp ServiceSlip thực hiện hàm khởi tạo, setter()
-62. Lớp ServiceSlip trả kết quả cho lớp ServiceSlipDAO
-63. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
-64. Lớp RESTController trả kết quả cho lớp HTTPClient
-65. Lớp HTTPClient trả kết quả cho ServiceSlipInfo.tsx
-66. ServiceSlipInfo.tsx lưu vào session: serviceSlipID
-67. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ cho quản lý
-68. Quản lý click nút Thêm dịch vụ
-69. ServiceSlipInfo.tsx gọi SearchService.tsx
-70. SearchService.tsx lấy từ session: serviceSlipID
-71. SearchService.tsx hiển thị giao diện cho quản lý
-72. Quản lý nhập từ khóa tên dịch vụ và click Tìm kiếm
-73. SearchService.tsx gọi lớp HTTPClient
-74. Lớp HTTPClient thực hiện hàm fetch()
-75. Lớp HTTPClient gọi lớp RESTController
-76. Lớp RESTController thực hiện hàm requestMapping()
-77. Lớp RESTController gọi lớp ServiceDAO
-78. Lớp ServiceDAO thực hiện hàm findServicesByKeyword()
-79. Lớp ServiceDAO gọi lớp Service
-80. Lớp Service thực hiện hàm khởi tạo, setter()
-81. Lớp Service trả kết quả cho lớp ServiceDAO
-82. Lớp ServiceDAO trả kết quả cho lớp RESTController
-83. Lớp RESTController trả kết quả cho lớp HTTPClient
-84. Lớp HTTPClient trả kết quả cho SearchService.tsx
-85. SearchService.tsx hiển thị danh sách dịch vụ tìm được cho quản lý
-86. Quản lý click chọn một dịch vụ
-87. SearchService.tsx gọi lớp HTTPClient
-88. Lớp HTTPClient thực hiện hàm fetch()
-89. Lớp HTTPClient gọi lớp RESTController
-90. Lớp RESTController thực hiện hàm requestMapping()
-91. Lớp RESTController gọi lớp ServiceDetailDAO
-92. Lớp ServiceDetailDAO thực hiện hàm addServiceToSlip()
-93. Lớp ServiceDetailDAO gọi lớp ServiceDetail
-94. Lớp ServiceDetail thực hiện hàm khởi tạo, setter()
-95. Lớp ServiceDetail trả kết quả cho lớp ServiceDetailDAO
-96. Lớp ServiceDetailDAO trả kết quả cho lớp RESTController
-97. Lớp RESTController trả kết quả cho lớp HTTPClient
-98. Lớp HTTPClient trả kết quả cho SearchService.tsx
-99. SearchService.tsx gọi ServiceSlipInfo.tsx
-100. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ đã cập nhật cho quản lý
-101. Quản lý click nút Thêm phụ tùng
-102. ServiceSlipInfo.tsx gọi AddComponent.tsx
-103. AddComponent.tsx lấy từ session: serviceSlipID
-104. AddComponent.tsx gọi lớp HTTPClient
-105. Lớp HTTPClient thực hiện hàm fetch()
-106. Lớp HTTPClient gọi lớp RESTController
-107. Lớp RESTController thực hiện hàm requestMapping()
-108. Lớp RESTController gọi lớp ComponentDAO
-109. Lớp ComponentDAO thực hiện hàm findComponentByKeyword()
-110. Lớp ComponentDAO gọi lớp Component
-111. Lớp Component thực hiện hàm khởi tạo, setter()
-112. Lớp Component trả kết quả cho lớp ComponentDAO
-113. Lớp ComponentDAO trả kết quả cho lớp RESTController
-114. Lớp RESTController trả kết quả cho lớp HTTPClient
-115. Lớp HTTPClient trả kết quả cho AddComponent.tsx
-116. AddComponent.tsx hiển thị danh sách phụ tùng kèm số lượng tồn kho cho quản lý
-117. Quản lý nhập số lượng và click nút Thêm
-118. AddComponent.tsx gọi lớp HTTPClient
-119. Lớp HTTPClient thực hiện hàm fetch()
-120. Lớp HTTPClient gọi lớp RESTController
-121. Lớp RESTController thực hiện hàm requestMapping()
-122. Lớp RESTController gọi lớp ComponentDetailDAO
-123. Lớp ComponentDetailDAO thực hiện hàm addComponentToSlip()
-124. Lớp ComponentDetailDAO gọi lớp ComponentDetail
-125. Lớp ComponentDetail thực hiện hàm khởi tạo, setter()
-126. Lớp ComponentDetail trả kết quả cho lớp ComponentDetailDAO
-127. Lớp ComponentDetailDAO trả kết quả cho lớp RESTController
-128. Lớp RESTController gọi lớp ComponentDAO
-129. Lớp ComponentDAO thực hiện hàm updateInventoryQty()
-130. Lớp ComponentDAO trả kết quả cho lớp RESTController
-131. Lớp RESTController trả kết quả cho lớp HTTPClient
-132. Lớp HTTPClient trả kết quả cho AddComponent.tsx
-133. AddComponent.tsx gọi ServiceSlipInfo.tsx
-134. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ đã cập nhật cho quản lý
-135. Quản lý click nút Lưu phiếu
-136. ServiceSlipInfo.tsx gọi lớp HTTPClient
-137. Lớp HTTPClient thực hiện hàm fetch()
-138. Lớp HTTPClient gọi lớp RESTController
-139. Lớp RESTController thực hiện hàm requestMapping()
-140. Lớp RESTController gọi lớp ServiceSlipDAO
-141. Lớp ServiceSlipDAO thực hiện hàm saveServiceSlip()
-142. Lớp ServiceSlipDAO gọi lớp ServiceSlip
-143. Lớp ServiceSlip thực hiện hàm setter()
-144. Lớp ServiceSlip trả kết quả cho lớp ServiceSlipDAO
-145. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
-146. Lớp RESTController trả kết quả cho lớp HTTPClient
-147. Lớp HTTPClient trả kết quả cho ServiceSlipInfo.tsx
-148. ServiceSlipInfo.tsx gọi ManagerHome.tsx
-149. ManagerHome.tsx hiển thị giao diện cho quản lý
+50. Quản lý yêu cầu khách hàng xác nhận thông tin
+51. Khách hàng xác nhận thông tin là chính xác
+52. Quản lý click nút Tiếp nhận trên dòng xe cần sửa
+53. SearchCustomerInfo.tsx lưu vào session: appointmentDetailID
+54. SearchCustomerInfo.tsx gọi ServiceSlipInfo.tsx
+55. ServiceSlipInfo.tsx lấy từ session: appointmentDetailID
+56. ServiceSlipInfo.tsx gọi lớp HTTPClient
+57. Lớp HTTPClient thực hiện hàm fetch()
+58. Lớp HTTPClient gọi lớp RESTController
+59. Lớp RESTController thực hiện hàm requestMapping()
+60. Lớp RESTController gọi lớp ServiceSlipDAO
+61. Lớp ServiceSlipDAO thực hiện hàm createServiceSlip()
+62. Lớp ServiceSlipDAO gọi lớp ServiceSlip
+63. Lớp ServiceSlip thực hiện hàm khởi tạo, setter()
+64. Lớp ServiceSlip trả kết quả cho lớp ServiceSlipDAO
+65. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
+66. Lớp RESTController gọi lớp AppointmentDAO
+67. Lớp AppointmentDAO thực hiện hàm updateAppointmentStatus()
+68. Lớp AppointmentDAO gọi lớp Appointment
+69. Lớp Appointment thực hiện hàm setter()
+70. Lớp Appointment trả kết quả cho lớp AppointmentDAO
+71. Lớp AppointmentDAO trả kết quả cho lớp RESTController
+72. Lớp RESTController trả kết quả cho lớp HTTPClient
+73. Lớp HTTPClient trả kết quả cho ServiceSlipInfo.tsx
+74. ServiceSlipInfo.tsx lưu vào session: serviceSlipID
+75. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ cho quản lý
+76. Quản lý click nút Thêm dịch vụ
+77. ServiceSlipInfo.tsx gọi SearchService.tsx
+78. SearchService.tsx lấy từ session: serviceSlipID
+79. SearchService.tsx hiển thị giao diện cho quản lý
+80. Quản lý nhập từ khóa tên dịch vụ và click Tìm kiếm
+81. SearchService.tsx gọi lớp HTTPClient
+82. Lớp HTTPClient thực hiện hàm fetch()
+83. Lớp HTTPClient gọi lớp RESTController
+84. Lớp RESTController thực hiện hàm requestMapping()
+85. Lớp RESTController gọi lớp ServiceDAO
+86. Lớp ServiceDAO thực hiện hàm findServicesByKeyword()
+87. Lớp ServiceDAO gọi lớp Service
+88. Lớp Service thực hiện hàm khởi tạo, setter()
+89. Lớp Service trả kết quả cho lớp ServiceDAO
+90. Lớp ServiceDAO trả kết quả cho lớp RESTController
+91. Lớp RESTController trả kết quả cho lớp HTTPClient
+92. Lớp HTTPClient trả kết quả cho SearchService.tsx
+93. SearchService.tsx hiển thị danh sách dịch vụ tìm được cho quản lý
+94. Quản lý click chọn một dịch vụ
+95. SearchService.tsx gọi lớp HTTPClient
+96. Lớp HTTPClient thực hiện hàm fetch()
+97. Lớp HTTPClient gọi lớp RESTController
+98. Lớp RESTController thực hiện hàm requestMapping()
+99. Lớp RESTController gọi lớp ServiceSlipDAO
+100. Lớp ServiceSlipDAO thực hiện hàm addServiceToSlip()
+101. Lớp ServiceSlipDAO gọi lớp ServiceDetail
+102. Lớp ServiceDetail thực hiện hàm khởi tạo, setter()
+103. Lớp ServiceDetail trả kết quả cho lớp ServiceSlipDAO
+104. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
+105. Lớp RESTController trả kết quả cho lớp HTTPClient
+106. Lớp HTTPClient trả kết quả cho SearchService.tsx
+107. SearchService.tsx gọi ServiceSlipInfo.tsx
+108. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ đã cập nhật cho quản lý
+109. Quản lý click nút Thêm phụ tùng
+110. ServiceSlipInfo.tsx gọi AddComponent.tsx
+111. AddComponent.tsx lấy từ session: serviceSlipID
+112. AddComponent.tsx gọi lớp HTTPClient
+113. Lớp HTTPClient thực hiện hàm fetch()
+114. Lớp HTTPClient gọi lớp RESTController
+115. Lớp RESTController thực hiện hàm requestMapping()
+116. Lớp RESTController gọi lớp ComponentDAO
+117. Lớp ComponentDAO thực hiện hàm findComponentByKeyword()
+118. Lớp ComponentDAO gọi lớp Component
+119. Lớp Component thực hiện hàm khởi tạo, setter()
+120. Lớp Component trả kết quả cho lớp ComponentDAO
+121. Lớp ComponentDAO trả kết quả cho lớp RESTController
+122. Lớp RESTController trả kết quả cho lớp HTTPClient
+123. Lớp HTTPClient trả kết quả cho AddComponent.tsx
+124. AddComponent.tsx hiển thị danh sách phụ tùng kèm số lượng tồn kho cho quản lý
+125. Quản lý nhập số lượng và click nút Thêm
+126. AddComponent.tsx gọi lớp HTTPClient
+127. Lớp HTTPClient thực hiện hàm fetch()
+128. Lớp HTTPClient gọi lớp RESTController
+129. Lớp RESTController thực hiện hàm requestMapping()
+130. Lớp RESTController gọi lớp ServiceSlipDAO
+131. Lớp ServiceSlipDAO thực hiện hàm addComponentToSlip()
+132. Lớp ServiceSlipDAO gọi lớp ComponentDetail
+133. Lớp ComponentDetail thực hiện hàm khởi tạo, setter()
+134. Lớp ComponentDetail trả kết quả cho lớp ServiceSlipDAO
+135. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
+136. Lớp RESTController gọi lớp ComponentDAO
+137. Lớp ComponentDAO thực hiện hàm updateInventoryQty()
+138. Lớp ComponentDAO trả kết quả cho lớp RESTController
+139. Lớp RESTController trả kết quả cho lớp HTTPClient
+140. Lớp HTTPClient trả kết quả cho AddComponent.tsx
+141. AddComponent.tsx gọi ServiceSlipInfo.tsx
+142. ServiceSlipInfo.tsx hiển thị phiếu dịch vụ đã cập nhật cho quản lý
+143. Quản lý click nút Lưu phiếu
+144. ServiceSlipInfo.tsx gọi lớp HTTPClient
+145. Lớp HTTPClient thực hiện hàm fetch()
+146. Lớp HTTPClient gọi lớp RESTController
+147. Lớp RESTController thực hiện hàm requestMapping()
+148. Lớp RESTController gọi lớp ServiceSlipDAO
+149. Lớp ServiceSlipDAO thực hiện hàm saveServiceSlip()
+150. Lớp ServiceSlipDAO gọi lớp ServiceSlip
+151. Lớp ServiceSlip thực hiện hàm setter()
+152. Lớp ServiceSlip trả kết quả cho lớp ServiceSlipDAO
+153. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
+154. Lớp RESTController trả kết quả cho lớp HTTPClient
+155. Lớp HTTPClient trả kết quả cho ServiceSlipInfo.tsx
+156. ServiceSlipInfo.tsx gọi ManagerHome.tsx
+157. ManagerHome.tsx hiển thị giao diện cho quản lý
 
-Có thể lặp lại các bước 68 đến 100 để thêm nhiều dịch vụ và lặp các bước 101 đến 134
+Có thể lặp lại các bước 76 đến 108 để thêm nhiều dịch vụ và lặp các bước 109 đến 142
 để thêm nhiều phụ tùng, tới khi phiếu đủ nội dung thì quản lý mới lưu phiếu.
 
 ---
@@ -205,12 +213,12 @@ Có thể lặp lại các bước 68 đến 100 để thêm nhiều dịch vụ
 38. Lớp HTTPClient thực hiện hàm fetch()
 39. Lớp HTTPClient gọi lớp RESTController
 40. Lớp RESTController thực hiện hàm requestMapping()
-41. Lớp RESTController gọi lớp ServiceDetailDAO
-42. Lớp ServiceDetailDAO thực hiện hàm assignStaffToServiceDetail()
-43. Lớp ServiceDetailDAO gọi lớp ServiceDetail
+41. Lớp RESTController gọi lớp ServiceSlipDAO
+42. Lớp ServiceSlipDAO thực hiện hàm assignStaffToServiceDetail()
+43. Lớp ServiceSlipDAO gọi lớp ServiceDetail
 44. Lớp ServiceDetail thực hiện hàm setter()
-45. Lớp ServiceDetail trả kết quả cho lớp ServiceDetailDAO
-46. Lớp ServiceDetailDAO trả kết quả cho lớp RESTController
+45. Lớp ServiceDetail trả kết quả cho lớp ServiceSlipDAO
+46. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
 47. Lớp RESTController trả kết quả cho lớp HTTPClient
 48. Lớp HTTPClient trả kết quả cho StaffList.tsx
 49. Quản lý click nút Tiếp tục chọn khoang sửa
@@ -248,8 +256,9 @@ Có thể lặp lại các bước 68 đến 100 để thêm nhiều dịch vụ
 81. Lớp ServiceSlipDAO trả kết quả cho lớp RESTController
 82. Lớp RESTController trả kết quả cho lớp HTTPClient
 83. Lớp HTTPClient trả kết quả cho ChooseSlot.tsx
-84. ChooseSlot.tsx gọi SearchNeededServiceSlip.tsx
-85. SearchNeededServiceSlip.tsx hiển thị danh sách phiếu đã cập nhật cho quản lý
+84. ChooseSlot.tsx gửi thông báo phân công tới nhân viên phục vụ
+85. ChooseSlot.tsx gọi SearchNeededServiceSlip.tsx
+86. SearchNeededServiceSlip.tsx hiển thị danh sách phiếu đã cập nhật cho quản lý
 
 Có thể lặp lại các bước 36 đến 48 cho tới khi mọi dòng dịch vụ của phiếu đều đã có
 nhân viên phụ trách thì quản lý mới sang bước chọn khoang sửa chữa.
@@ -287,15 +296,15 @@ nhân viên phụ trách thì quản lý mới sang bước chọn khoang sửa 
 27. Lớp Staff thực hiện hàm khởi tạo, setter()
 28. Lớp Staff trả kết quả cho lớp StaffDAO
 29. Lớp StaffDAO trả kết quả cho lớp RESTController
-30. Lớp RESTController gọi lớp ServiceDetailDAO
-31. Lớp ServiceDetailDAO thực hiện hàm getServiceDetailsOfStaffInMonth()
-32. Lớp ServiceDetailDAO gọi lớp ServiceDetail
+30. Lớp RESTController gọi lớp StaffDAO
+31. Lớp StaffDAO thực hiện hàm getServiceDetailsOfStaffInMonth()
+32. Lớp StaffDAO gọi lớp ServiceDetail
 33. Lớp ServiceDetail thực hiện hàm khởi tạo, setter()
 34. Lớp ServiceDetail gọi lớp Service
 35. Lớp Service thực hiện hàm khởi tạo, setter()
 36. Lớp Service trả kết quả cho lớp ServiceDetail
-37. Lớp ServiceDetail trả kết quả cho lớp ServiceDetailDAO
-38. Lớp ServiceDetailDAO trả kết quả cho lớp RESTController
+37. Lớp ServiceDetail trả kết quả cho lớp StaffDAO
+38. Lớp StaffDAO trả kết quả cho lớp RESTController
 39. Lớp RESTController trả kết quả cho lớp HTTPClient
 40. Lớp HTTPClient trả kết quả cho SummarySheet.tsx
 41. SummarySheet.tsx hiển thị bảng tổng hợp công cho quản lý
@@ -307,12 +316,12 @@ nhân viên phụ trách thì quản lý mới sang bước chọn khoang sửa 
 47. Lớp HTTPClient thực hiện hàm fetch()
 48. Lớp HTTPClient gọi lớp RESTController
 49. Lớp RESTController thực hiện hàm requestMapping()
-50. Lớp RESTController gọi lớp ServiceDetailDAO
-51. Lớp ServiceDetailDAO thực hiện hàm getServiceDetailsOfStaffInMonth()
-52. Lớp ServiceDetailDAO gọi lớp ServiceDetail
+50. Lớp RESTController gọi lớp StaffDAO
+51. Lớp StaffDAO thực hiện hàm getServiceDetailsOfStaffInMonth()
+52. Lớp StaffDAO gọi lớp ServiceDetail
 53. Lớp ServiceDetail thực hiện hàm khởi tạo, setter()
-54. Lớp ServiceDetail trả kết quả cho lớp ServiceDetailDAO
-55. Lớp ServiceDetailDAO trả kết quả cho lớp RESTController
+54. Lớp ServiceDetail trả kết quả cho lớp StaffDAO
+55. Lớp StaffDAO trả kết quả cho lớp RESTController
 56. Lớp RESTController trả kết quả cho lớp HTTPClient
 57. Lớp HTTPClient trả kết quả cho DetailSheet.tsx
 58. DetailSheet.tsx hiển thị chi tiết công của nhân viên cho quản lý

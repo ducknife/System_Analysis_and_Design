@@ -27,7 +27,7 @@ RESTController và các lớp DAO, kèm các action bên trong.
   - Gọi hàm findCarsOfCustomer()
   - Gọi hàm findAppointmentsOfCustomer()
   - Hiện thông tin khách, xe và lịch hẹn
-  - Lưu vào session: carID
+  - Lưu vào session: appointmentDetailID
 - AddCustomer.tsx
   - Hiện giao diện
   - Lấy từ form: thông tin khách hàng và xe
@@ -35,8 +35,9 @@ RESTController và các lớp DAO, kèm các action bên trong.
   - Gọi hàm addCar()
   - Thông báo trùng biển số
 - ServiceSlipInfo.tsx
-  - Lấy từ session: carID
+  - Lấy từ session: appointmentDetailID
   - Gọi hàm createServiceSlip()
+  - Gọi hàm updateAppointmentStatus()
   - Lưu vào session: serviceSlipID
   - Hiện phiếu dịch vụ
   - Gọi hàm saveServiceSlip()
@@ -71,18 +72,17 @@ RESTController và các lớp DAO, kèm các action bên trong.
   - addCar()
 - AppointmentDAO
   - findAppointmentsOfCustomer()
+  - updateAppointmentStatus()
 - ServiceSlipDAO
   - createServiceSlip()
   - saveServiceSlip()
+  - addServiceToSlip()
+  - addComponentToSlip()
 - ServiceDAO
   - findServicesByKeyword()
-- ServiceDetailDAO
-  - addServiceToSlip()
 - ComponentDAO
   - findComponentByKeyword()
   - updateInventoryQty()
-- ComponentDetailDAO
-  - addComponentToSlip()
 
 Ta được biểu đồ hoạt động:
 
@@ -116,6 +116,7 @@ RESTController và các lớp DAO, kèm các action bên trong.
   - Khóa khoang đang có xe sửa
   - Gọi hàm updateSlotStatus()
   - Gọi hàm updateServiceSlip()
+  - Gửi thông báo phân công tới nhân viên phục vụ
 - HTTPClient
   - fetch()
 - RESTController
@@ -123,10 +124,9 @@ RESTController và các lớp DAO, kèm các action bên trong.
 - ServiceSlipDAO
   - findServiceSlipByKeyword()
   - updateServiceSlip()
+  - assignStaffToServiceDetail()
 - StaffDAO
   - getStaffList()
-- ServiceDetailDAO
-  - assignStaffToServiceDetail()
 - SlotDAO
   - getAvailableSlots()
   - updateSlotStatus()
@@ -180,10 +180,9 @@ RESTController và các lớp DAO, kèm các action bên trong.
   - saveAllSalaryTableOfMonth()
   - savePaymentMethod()
   - updateIsReceived()
-- ServiceDetailDAO
-  - getServiceDetailsOfStaffInMonth()
 - StaffDAO
   - getStaffList()
+  - getServiceDetailsOfStaffInMonth()
 
 Ta được biểu đồ hoạt động:
 
