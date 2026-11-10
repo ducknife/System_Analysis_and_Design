@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 
+import RequireManager from './RequireManager'
+
 import Login from './pages/Login'
 import ManagerHome from './pages/ManagerHome'
 
@@ -23,23 +25,26 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/manager-home" element={<ManagerHome />} />
 
-      <Route path="/search-customer" element={<SearchCustomerInfo />} />
-      <Route path="/add-customer" element={<AddCustomer />} />
-      <Route path="/service-slip" element={<ServiceSlipInfo />} />
-      <Route path="/search-service" element={<SearchService />} />
-      <Route path="/add-component" element={<AddComponent />} />
+      <Route element={<RequireManager />}>
+        <Route path="/manager-home" element={<ManagerHome />} />
 
-      <Route path="/search-needed-slip" element={<SearchNeededServiceSlip />} />
-      <Route path="/staff-list" element={<StaffList />} />
-      <Route path="/choose-slot" element={<ChooseSlot />} />
+        <Route path="/search-customer" element={<SearchCustomerInfo />} />
+        <Route path="/add-customer" element={<AddCustomer />} />
+        <Route path="/service-slip" element={<ServiceSlipInfo />} />
+        <Route path="/search-service" element={<SearchService />} />
+        <Route path="/add-component" element={<AddComponent />} />
 
-      <Route path="/choose-month" element={<ChooseMonth />} />
-      <Route path="/summary-sheet" element={<SummarySheet />} />
-      <Route path="/detail-sheet" element={<DetailSheet />} />
-      <Route path="/choose-method" element={<ChooseMethod />} />
-      <Route path="/confirm-received" element={<ConfirmReceived />} />
+        <Route path="/search-needed-slip" element={<SearchNeededServiceSlip />} />
+        <Route path="/staff-list" element={<StaffList />} />
+        <Route path="/choose-slot" element={<ChooseSlot />} />
+
+        <Route path="/choose-month" element={<ChooseMonth />} />
+        <Route path="/summary-sheet" element={<SummarySheet />} />
+        <Route path="/detail-sheet" element={<DetailSheet />} />
+        <Route path="/choose-method" element={<ChooseMethod />} />
+        <Route path="/confirm-received" element={<ConfirmReceived />} />
+      </Route>
     </Routes>
   )
 }

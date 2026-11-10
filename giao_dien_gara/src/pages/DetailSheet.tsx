@@ -1,13 +1,24 @@
 import { Link } from 'react-router-dom'
+import { date, money, slipCode } from '../format'
 import Layout from '../Layout'
-import { LABOR_UNIT_PRICE, detailRows, money } from '../data'
+import { session } from '../session'
+import type { StaffWork } from '../types'
+import { useFetch } from '../useFetch'
 
 export default function DetailSheet() {
-  const tongCong = detailRows.reduce((s, r) => s + r.laborContent, 0)
+  const month = session.get('month')
+  const year = session.get('year')
+  const laborUnitPrice = session.get('laborUnitPrice')
+  const staff = session.get('staff')
+  const [works] = useFetch<StaffWork[]>(`/staffs/${staff.staffID}/service-details?month=${month}&year=${year}`, [])
+  const totalLabor = works.reduce((sum, work) => sum + work.laborContent, 0)
+
   return (
     <Layout title="Chi tiết công nhân viên">
       <div className="card">
-        <h2>Chi tiết công &mdash; NV001 Lê Văn Hoàng &mdash; tháng 10/2026</h2>
+        <h2>
+          Chi tiết công &mdash; {staff.employeeCode} {staff.fullname} &mdash; tháng {month}/{year}
+        </h2>
 
         <table id="tblServiceDetail">
           <thead>
@@ -20,25 +31,21 @@ export default function DetailSheet() {
             </tr>
           </thead>
           <tbody>
-            {detailRows.map((r, i) => (
-              <tr key={i}>
-                <td>{r.serviceSlipID}</td>
-                <td>{r.licensePlate}</td>
-                <td>{r.service}</td>
-                <td className="num">{r.laborContent.toFixed(1)}</td>
-                <td>{r.finishedAt}</td>
+            {works.map((work) => (
+              <tr key={`${work.serviceSlipID}-${work.serviceID}`}>
+                <td>{slipCode(work.serviceSlipID)}</td>
+                <td>{work.licensePlate}</td>
+                <td>{work.serviceName}</td>
+                <td className="num">{work.laborContent.toFixed(1)}</td>
+                <td>{date(work.finishedAt)}</td>
               </tr>
             ))}
-            <tr>
-              <th colSpan={3}>Tổng cộng các dòng hiển thị</th>
-              <th className="num">{tongCong.toFixed(1)}</th>
-              <th />
-            </tr>
           </tbody>
         </table>
 
         <div className="total">
-          Tổng công cả tháng: <b>74</b> &times; {money(LABOR_UNIT_PRICE)} = <b>{money(37000000)}</b>
+          Tổng công cả tháng: <b id="outTotalLabor">{totalLabor}</b> &times; {money(laborUnitPrice)} ={' '}
+          <b>{money(totalLabor * laborUnitPrice)}</b>
         </div>
 
         <div className="actions">

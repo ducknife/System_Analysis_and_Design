@@ -1,12 +1,51 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { slipCode } from '../format'
+import { HTTPClient } from '../HTTPClient'
 import Layout from '../Layout'
-import { serviceDetails, staffs } from '../data'
+import { session } from '../session'
+import { showError } from '../showError'
+import type { ServiceSlip, Staff } from '../types'
+import { useFetch } from '../useFetch'
 
 export default function StaffList() {
+  const navigate = useNavigate()
+  const slipPath = `/service-slips/${session.get('serviceSlipID')}`
+  const [slip, setSlip] = useFetch<ServiceSlip | null>(slipPath, null)
+  const [staffs] = useFetch<Staff[]>('/staffs', [])
+
+  if (!slip) {
+    return null
+  }
+
+  const chooseStaff = async (serviceID: number, value: string) => {
+    const staffID = value ? Number(value) : null
+    try {
+      await HTTPClient.fetch(`${slipPath}/services/${serviceID}/staff`, 'PUT', { staffID })
+      setSlip({
+        ...slip,
+        serviceDetails: slip.serviceDetails.map((detail) =>
+          detail.serviceID === serviceID ? { ...detail, staffID } : detail,
+        ),
+      })
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  const goToChooseSlot = () => {
+    if (slip.serviceDetails.some((detail) => detail.staffID === null)) {
+      alert('Vui lòng chọn nhân viên cho tất cả dịch vụ trong phiếu trước khi xác nhận')
+      return
+    }
+    navigate('/choose-slot')
+  }
+
   return (
     <Layout title="Chọn nhân viên phục vụ">
       <div className="card">
-        <h2>Phân công cho phiếu PDV000101 &mdash; 30A-123.45</h2>
+        <h2>
+          Phân công cho phiếu {slipCode(slip.serviceSlipID)} &mdash; {slip.car.licensePlate}
+        </h2>
 
         <h3>Dòng dịch vụ cần phân công</h3>
         <table id="tblServiceDetail">
@@ -19,19 +58,23 @@ export default function StaffList() {
             </tr>
           </thead>
           <tbody>
-            {serviceDetails.map((d) => (
-              <tr key={d.serviceID}>
-                <td>{d.serviceID}</td>
-                <td>{d.name}</td>
-                <td className="num">{d.laborContent.toFixed(1)}</td>
+            {slip.serviceDetails.map((detail) => (
+              <tr key={detail.serviceID}>
+                <td>{detail.serviceID}</td>
+                <td>{detail.name}</td>
+                <td className="num">{detail.laborContent.toFixed(1)}</td>
                 <td>
-                  <select defaultValue="">
+                  <select
+                    id={`cboStaff${detail.serviceID}`}
+                    value={detail.staffID ?? ''}
+                    onChange={(event) => chooseStaff(detail.serviceID, event.target.value)}
+                  >
                     <option value="">-- Chọn nhân viên --</option>
                     {staffs
-                      .filter((s) => !s.busy)
-                      .map((s) => (
-                        <option key={s.userID} value={s.userID}>
-                          {s.employeeCode} &mdash; {s.fullname}
+                      .filter((staff) => !staff.busy || staff.userID === detail.staffID)
+                      .map((staff) => (
+                        <option key={staff.userID} value={staff.userID}>
+                          {staff.employeeCode} &mdash; {staff.fullname}
                         </option>
                       ))}
                   </select>
@@ -52,13 +95,13 @@ export default function StaffList() {
             </tr>
           </thead>
           <tbody>
-            {staffs.map((s) => (
-              <tr key={s.userID}>
-                <td>{s.employeeCode}</td>
-                <td>{s.fullname}</td>
-                <td>{s.specialization}</td>
+            {staffs.map((staff) => (
+              <tr key={staff.userID}>
+                <td>{staff.employeeCode}</td>
+                <td>{staff.fullname}</td>
+                <td>{staff.specialization}</td>
                 <td>
-                  {s.busy ? (
+                  {staff.busy ? (
                     <span className="tag busy">Đang bận</span>
                   ) : (
                     <span className="tag ok">Sẵn sàng</span>
@@ -70,9 +113,9 @@ export default function StaffList() {
         </table>
 
         <div className="actions">
-          <Link className="btn" id="btnNext" to="/choose-slot">
+          <button className="btn" id="btnNext" onClick={goToChooseSlot}>
             Tiếp tục chọn khoang sửa
-          </Link>
+          </button>
           <Link className="btn ghost" id="btnBack" to="/search-needed-slip">
             Quay lại
           </Link>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Layout from '../Layout'
+import { session } from '../session'
 
 export default function ManagerHome() {
   return (
@@ -24,7 +25,7 @@ export default function ManagerHome() {
           </Link>
         </div>
         <div className="actions">
-          <Link className="btn ghost" id="btnLogout" to="/">
+          <Link className="btn ghost" id="btnLogout" to="/" onClick={session.clear}>
             Đăng xuất
           </Link>
         </div>

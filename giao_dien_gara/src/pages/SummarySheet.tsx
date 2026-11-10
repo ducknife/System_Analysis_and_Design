@@ -1,13 +1,45 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { money } from '../format'
+import { HTTPClient } from '../HTTPClient'
 import Layout from '../Layout'
-import { LABOR_UNIT_PRICE, money, salaryRows } from '../data'
+import { session } from '../session'
+import { showError } from '../showError'
+import type { SalarySummary } from '../types'
+import { useFetch } from '../useFetch'
 
 export default function SummarySheet() {
-  const tong = salaryRows.reduce((s, r) => s + r.amount, 0)
+  const navigate = useNavigate()
+  const month = session.get('month')
+  const year = session.get('year')
+  const laborUnitPrice = session.get('laborUnitPrice')
+  const [rows] = useFetch<SalarySummary[]>(`/salary-summary?month=${month}&year=${year}`, [])
+  const totalAmount = rows.reduce((sum, row) => sum + row.totalLabor * laborUnitPrice, 0)
+
+  function viewDetail(row: SalarySummary) {
+    session.set('staff', row)
+    navigate('/detail-sheet')
+  }
+
+  async function saveAll() {
+    try {
+      await HTTPClient.fetch('/salary-tables', 'POST', {
+        month,
+        year,
+        laborUnitPrice,
+        managerID: session.get('manager').userID,
+      })
+      navigate('/choose-method')
+    } catch (error) {
+      showError(error)
+    }
+  }
+
   return (
-    <Layout title="Bảng công tháng 10/2026">
+    <Layout title={`Bảng công tháng ${month}/${year}`}>
       <div className="card">
-        <h2>Bảng tổng hợp công nhân viên phục vụ &mdash; tháng 10/2026</h2>
+        <h2>
+          Bảng tổng hợp công nhân viên phục vụ &mdash; tháng {month}/{year}
+        </h2>
 
         <table id="tblSalaryTable">
           <thead>
@@ -21,17 +53,17 @@ export default function SummarySheet() {
             </tr>
           </thead>
           <tbody>
-            {salaryRows.map((r) => (
-              <tr key={r.userID}>
-                <td>{r.employeeCode}</td>
-                <td>{r.fullname}</td>
-                <td className="num">{r.totalLabor}</td>
-                <td className="num">{money(LABOR_UNIT_PRICE)}</td>
-                <td className="num">{money(r.amount)}</td>
+            {rows.map((row) => (
+              <tr key={row.staffID}>
+                <td>{row.employeeCode}</td>
+                <td>{row.fullname}</td>
+                <td className="num">{row.totalLabor}</td>
+                <td className="num">{money(laborUnitPrice)}</td>
+                <td className="num">{money(row.totalLabor * laborUnitPrice)}</td>
                 <td>
-                  <Link className="btn sm" to="/detail-sheet">
+                  <button className="btn sm" id={`btnDetail${row.staffID}`} onClick={() => viewDetail(row)}>
                     Xem
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -39,13 +71,13 @@ export default function SummarySheet() {
         </table>
 
         <div className="total">
-          Tổng quỹ lương tháng: <b>{money(tong)}</b>
+          Tổng quỹ lương tháng: <b id="outTotalAmount">{money(totalAmount)}</b>
         </div>
 
         <div className="actions">
-          <Link className="btn" id="btnSaveAll" to="/choose-method">
+          <button className="btn" id="btnSaveAll" onClick={saveAll}>
             Lưu bảng công và chọn hình thức trả
-          </Link>
+          </button>
           <Link className="btn ghost" id="btnBack" to="/choose-month">
             Quay lại
           </Link>

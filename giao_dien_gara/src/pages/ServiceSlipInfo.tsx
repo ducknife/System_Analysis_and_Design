@@ -1,29 +1,80 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { dateTime, money, slipCode } from '../format'
+import { HTTPClient } from '../HTTPClient'
 import Layout from '../Layout'
-import { cars, componentDetails, customer, money, serviceDetails } from '../data'
+import { session } from '../session'
+import { showError } from '../showError'
+import type { ServiceSlip } from '../types'
+
+async function openServiceSlip() {
+  const serviceSlipID = session.get('serviceSlipID')
+  if (serviceSlipID) {
+    return HTTPClient.fetch<ServiceSlip>(`/service-slips/${serviceSlipID}`)
+  }
+  const created = await HTTPClient.fetch<ServiceSlip>('/service-slips', 'POST', {
+    ...session.get('receipt'),
+    managerID: session.get('manager').userID,
+  })
+  session.set('serviceSlipID', created.serviceSlipID)
+  return created
+}
 
 export default function ServiceSlipInfo() {
-  const tienDv = serviceDetails.reduce((s, d) => s + d.price, 0)
-  const tienPt = componentDetails.reduce((s, d) => s + d.qty * d.price, 0)
+  const navigate = useNavigate()
+  const [slip, setSlip] = useState<ServiceSlip | null>(null)
+
+  useEffect(() => {
+    openServiceSlip().then(setSlip).catch(showError)
+  }, [])
+
+  if (!slip) {
+    return null
+  }
+
+  const slipPath = `/service-slips/${slip.serviceSlipID}`
+  const serviceCost = slip.serviceDetails.reduce((sum, detail) => sum + detail.price, 0)
+  const componentCost = slip.componentDetails.reduce((sum, detail) => sum + detail.qty * detail.price, 0)
+
+  const removeLine = async (linePath: string) => {
+    try {
+      await HTTPClient.fetch(`${slipPath}/${linePath}`, 'DELETE')
+      setSlip(await HTTPClient.fetch<ServiceSlip>(slipPath))
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  const save = async () => {
+    try {
+      await HTTPClient.fetch(`${slipPath}/save`, 'PUT')
+      session.remove('serviceSlipID', 'receipt')
+      alert('Thêm phiếu dịch vụ thành công')
+      navigate('/manager-home')
+    } catch (error) {
+      showError(error)
+    }
+  }
+
   return (
     <Layout title="Phiếu dịch vụ">
       <div className="card">
-        <h2>Phiếu dịch vụ PDV000101</h2>
+        <h2>Phiếu dịch vụ {slipCode(slip.serviceSlipID)}</h2>
         <table>
           <tbody>
             <tr>
               <th style={{ width: 150 }}>Khách hàng</th>
-              <td>{customer.fullname}</td>
+              <td>{slip.customer.fullname}</td>
               <th style={{ width: 130 }}>Điện thoại</th>
-              <td>{customer.phone}</td>
+              <td>{slip.customer.phone}</td>
             </tr>
             <tr>
               <th>Xe tiếp nhận</th>
               <td>
-                {cars[0].licensePlate} &mdash; {cars[0].brand} {cars[0].model}
+                {slip.car.licensePlate} &mdash; {slip.car.brand} {slip.car.model}
               </td>
               <th>Thời gian</th>
-              <td>21/10/2026 08:45</td>
+              <td>{dateTime(slip.time)}</td>
             </tr>
           </tbody>
         </table>
@@ -40,14 +91,20 @@ export default function ServiceSlipInfo() {
             </tr>
           </thead>
           <tbody>
-            {serviceDetails.map((d) => (
-              <tr key={d.serviceID}>
-                <td>{d.serviceID}</td>
-                <td>{d.name}</td>
-                <td className="num">{d.laborContent.toFixed(1)}</td>
-                <td className="num">{money(d.price)}</td>
+            {slip.serviceDetails.map((detail) => (
+              <tr key={detail.serviceID}>
+                <td>{detail.serviceID}</td>
+                <td>{detail.name}</td>
+                <td className="num">{detail.laborContent.toFixed(1)}</td>
+                <td className="num">{money(detail.price)}</td>
                 <td>
-                  <button className="btn sm ghost">Xóa</button>
+                  <button
+                    className="btn sm ghost"
+                    id={`btnDeleteService${detail.serviceID}`}
+                    onClick={() => removeLine(`services/${detail.serviceID}`)}
+                  >
+                    Xóa
+                  </button>
                 </td>
               </tr>
             ))}
@@ -67,15 +124,21 @@ export default function ServiceSlipInfo() {
             </tr>
           </thead>
           <tbody>
-            {componentDetails.map((d) => (
-              <tr key={d.componentID}>
-                <td>{d.componentID}</td>
-                <td>{d.name}</td>
-                <td className="num">{d.qty}</td>
-                <td className="num">{money(d.price)}</td>
-                <td className="num">{money(d.qty * d.price)}</td>
+            {slip.componentDetails.map((detail) => (
+              <tr key={detail.componentID}>
+                <td>{detail.componentID}</td>
+                <td>{detail.name}</td>
+                <td className="num">{detail.qty}</td>
+                <td className="num">{money(detail.price)}</td>
+                <td className="num">{money(detail.qty * detail.price)}</td>
                 <td>
-                  <button className="btn sm ghost">Xóa</button>
+                  <button
+                    className="btn sm ghost"
+                    id={`btnDeleteComponent${detail.componentID}`}
+                    onClick={() => removeLine(`components/${detail.componentID}`)}
+                  >
+                    Xóa
+                  </button>
                 </td>
               </tr>
             ))}
@@ -83,7 +146,7 @@ export default function ServiceSlipInfo() {
         </table>
 
         <div className="total">
-          Tổng chi phí tạm tính: <b>{money(tienDv + tienPt)}</b>
+          Tổng chi phí tạm tính: <b id="outTotalCost">{money(serviceCost + componentCost)}</b>
         </div>
 
         <div className="actions">
@@ -93,9 +156,9 @@ export default function ServiceSlipInfo() {
           <Link className="btn" id="btnAddComponent" to="/add-component">
             Thêm phụ tùng
           </Link>
-          <Link className="btn ghost" id="btnSave" to="/manager-home">
+          <button className="btn ghost" id="btnSave" disabled={!slip.serviceDetails.length} onClick={save}>
             Lưu phiếu
-          </Link>
+          </button>
         </div>
       </div>
     </Layout>

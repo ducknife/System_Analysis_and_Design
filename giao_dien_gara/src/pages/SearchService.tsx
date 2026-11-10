@@ -1,23 +1,50 @@
-import { Link } from 'react-router-dom'
+import { FormEvent, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { money } from '../format'
+import { HTTPClient } from '../HTTPClient'
 import Layout from '../Layout'
-import { money, services } from '../data'
+import { session } from '../session'
+import { showError } from '../showError'
+import type { Service } from '../types'
 
 export default function SearchService() {
+  const navigate = useNavigate()
+  const [keyword, setKeyword] = useState('')
+  const [services, setServices] = useState<Service[]>([])
+
+  async function search(event: FormEvent) {
+    event.preventDefault()
+    try {
+      setServices(await HTTPClient.fetch<Service[]>(`/services?keyword=${encodeURIComponent(keyword)}`))
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  async function choose(serviceID: number) {
+    try {
+      await HTTPClient.fetch(`/service-slips/${session.get('serviceSlipID')}/services`, 'POST', { serviceID })
+      navigate('/service-slip')
+    } catch (error) {
+      showError(error)
+    }
+  }
+
   return (
     <Layout title="Chọn dịch vụ">
       <div className="card">
         <h2>Tìm dịch vụ</h2>
-        <div className="row">
+        <form className="row" onSubmit={search}>
           <div style={{ flex: 3 }}>
             <label>Từ khóa tên dịch vụ</label>
-            <input id="txtServiceKeyword" defaultValue="thay" />
+            <input id="txtServiceKeyword" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
           </div>
           <div style={{ flex: 1, alignSelf: 'flex-end' }}>
             <button className="btn wide" id="btnSearch">
               Tìm kiếm
             </button>
           </div>
-        </div>
+        </form>
 
         <table id="tblService">
           <thead>
@@ -30,14 +57,20 @@ export default function SearchService() {
             </tr>
           </thead>
           <tbody>
-            {services.map((s) => (
-              <tr key={s.serviceID}>
-                <td>{s.serviceID}</td>
-                <td>{s.name}</td>
-                <td className="num">{s.laborContent.toFixed(1)}</td>
-                <td className="num">{money(s.price)}</td>
+            {services.map((service) => (
+              <tr key={service.serviceID}>
+                <td>{service.serviceID}</td>
+                <td>{service.name}</td>
+                <td className="num">{service.laborContent.toFixed(1)}</td>
+                <td className="num">{money(service.price)}</td>
                 <td>
-                  <button className="btn sm">Chọn</button>
+                  <button
+                    className="btn sm"
+                    id={`btnChoose${service.serviceID}`}
+                    onClick={() => choose(service.serviceID)}
+                  >
+                    Chọn
+                  </button>
                 </td>
               </tr>
             ))}

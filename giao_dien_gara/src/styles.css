@@ -53,6 +53,7 @@ input, select {
 .btn.ghost { background: #fff; color: #1d4e89; }
 .btn.sm { padding: 4px 10px; font-size: 13px; }
 .btn.wide { width: 100%; padding: 10px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
 .actions { display: flex; gap: 10px; margin-top: 18px; }
 table { width: 100%; border-collapse: collapse; margin-top: 6px; }
 th, td {
@@ -70,6 +71,7 @@ td.num, th.num { text-align: right; }
 .tag.busy { background: #fdeaea; color: #a42a21; }
 .tag.wait { background: #fff2dd; color: #8a5a10; }
 .note { font-size: 13px; color: #6b7785; margin-top: 10px; }
+.note.error { color: #b3261e; }
 .menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .menu a {
   display: block;
